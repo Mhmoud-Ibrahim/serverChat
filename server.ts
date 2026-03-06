@@ -48,7 +48,7 @@ const io = new Server(server, {
 // المسارات (Routes)
 app.use('/auth', userRouter);
 app.use(imgRouter);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname,'uploads')));
 
 // إعدادات Socket.io
  io.use(socketAuth);
@@ -70,7 +70,7 @@ app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
 // معالج الأخطاء العام
 app.use(globalErrorHandler);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 7860;
 server.listen(port, () => {
   console.log(` Server running on http://localhost:${port}`);
 });
