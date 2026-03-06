@@ -50,7 +50,7 @@ app.use(imgRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // إعدادات Socket.io
-// io.use(socketAuth);
+ io.use(socketAuth);
 io.on('connection', (socket) => {
   console.log(`🚀 User Authenticated: ${socket.data.userId} (Socket ID: ${socket.id})`);
   registerChatHandlers(io, socket);
