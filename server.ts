@@ -8,13 +8,14 @@ import path from 'path';
 import { fileURLToPath } from 'url'; // لإصلاح مسار الملفات
 
 // استيراد الملفات الخاصة بالمشروع
-import { registerChatHandlers } from './src/modules/socket/chatHandler.js';
+
 import { AppError } from './src/utils/appError.js';
 import globalErrorHandler from './src/middleware/globalError.js';
 import userRouter from './src/modules/user/user.routes.js';
 import imgRouter from './src/modules/imageHandler/imgs.routes.js';
 import socketAuth from './src/middleware/socket.js';
 import { dbConnections } from './db/dbConnections.js';
+import { registerChatHandlers } from './src/modules/socket/chatHandler.js';
 
 // تشغيل اتصال قاعدة البيانات
 await dbConnections();
@@ -69,7 +70,7 @@ app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
 // معالج الأخطاء العام
 app.use(globalErrorHandler);
 
-const port = process.env.PORT || 7860;
+const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(` Server running on http://localhost:${port}`);
 });
