@@ -16,3 +16,4 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: git push --force https://M2dd:$HF_TOKEN@huggingface.co/spaces/M2dd/serverChatApp main
+
