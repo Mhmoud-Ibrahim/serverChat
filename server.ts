@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
   });
 });
 
-app.get('/', (req, res) => res.send('OK'));
+app.get('/', (req, res) => res.send('OK its working .....'));
 
 // معالجة المسارات غير الموجودة
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
