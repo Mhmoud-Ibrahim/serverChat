@@ -28,7 +28,7 @@ const __dirname = path.dirname(__filename);
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-  origin: "https://chatnow26.netlify.app",
+  origin: "http://localhost:5173",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true, 
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -37,7 +37,7 @@ app.use(cors({
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://chatnow26.netlify.app",
+    origin: "http://localhost:5173",
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
