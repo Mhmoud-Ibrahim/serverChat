@@ -1,2 +1,8 @@
-# serverChat
-server to chat app on hanging face 
+---
+title: serverChatApp
+emoji: 💬
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+---
