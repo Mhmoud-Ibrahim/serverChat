@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
   });
 });
 app.get('/', (req, res) => res.send('OK'));
-
+dbConnections();
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`Route ${req.originalUrl} Not Found`, 404))
 })
