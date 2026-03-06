@@ -20,7 +20,7 @@ const app: Application = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-  origin: "https://chat-now-orpin.vercel.app",
+  origin: "https://chatnow26.netlify.app",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true, 
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -30,7 +30,7 @@ app.use('/auth', userRouter);
 app.use(imgRouter)
 const io = new Server(server, {
   cors: {
-    origin: "https://chat-now-orpin.vercel.app",
+    origin: "https://chatnow26.netlify.app",
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // ضروري للسماح بالكوكيز
     allowedHeaders: ['Content-Type', 'Authorization']

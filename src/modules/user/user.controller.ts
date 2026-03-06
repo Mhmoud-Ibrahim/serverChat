@@ -28,39 +28,6 @@ const signup = catchError(async (req, res) => {
     res.json({ message: "success" })
 })
 
-
-
-// const signin = catchError(async (req: Request, res: Response, next: NextFunction) => {
-//     const { email, password } = req.body;
-
-//     const user = await User.findOne({ email });
-//     if (!user || !(await bcrypt.compare(password, user.password))) {
-//         return next(new AppError('Invalid email or password', 401));
-//     }
-//     const token = jwt.sign(
-//         { userId: user._id }, process.env.JWT_KEY as string || "ChatNowSecretKey",  { expiresIn: '1d' }
-//     );
-
-//     res.cookie('token', token, {
-//         httpOnly: true,
-//         secure:true, 
-//         sameSite: 'none',
-//         maxAge: 7 * 24 * 60 * 60 * 1000 ,
-        
-//     });
-//  res.cookie('userId', user._id.toString(), {
-//         httpOnly: true, 
-//         secure: true,
-//         sameSite: 'none',
-//         maxAge: 7 * 24 * 60 * 60 * 1000 ,
-        
-//     });
-//     res.status(200).json({ 
-//         message: "success", 
-//         user: { name: user.name, id: user._id } 
-//     });
-// });
-
 const signin = catchError(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select('+password');
@@ -101,7 +68,6 @@ const logout = catchError((req:Request, res:any) => {
 
 
 const getMyProfile = catchError(async (req, res, next) => {
-   
     const token = req.cookies.token; 
 
     if (!token) {
