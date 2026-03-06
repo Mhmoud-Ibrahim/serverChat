@@ -36,7 +36,7 @@ const signin = catchError(async (req: Request, res: Response, next: NextFunction
     }
     const token = jwt.sign(
         { userId: user._id, name: user.name , email: user.email , image: user.userImage }, 
-        process.env.JWT_KEY as string || "ChatNowSecretKey", 
+        process.env.JWT_KEY as string || "MahmoudChatsecretkey", 
         { expiresIn: '7d' }  // جعلناها 7 أيام لتطابق الكوكي
     );
     const cookieOptions = {
@@ -47,8 +47,6 @@ const signin = catchError(async (req: Request, res: Response, next: NextFunction
     };
 
     res.cookie('token', token, cookieOptions);
-    
-    // إرسال الـ userId في الـ response كافي جداً ولا داعي لكوكي إضافي له
     res.status(200).json({ 
         message: "success", 
         user: { name: user.name, id: user._id , email: user.email , image: user.userImage } 

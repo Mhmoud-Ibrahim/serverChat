@@ -4,9 +4,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import express from 'express';
 import type { Application, NextFunction, Request, Response } from 'express';
-
 import cookieParser from 'cookie-parser'; 
-
 import { registerChatHandlers } from './src/modules/socket/chatHandler.js';
 import { AppError } from './src/utils/appError.js';
 import globalErrorHandler from './src/middleware/globalError.js';
@@ -51,14 +49,10 @@ io.on('connection', (socket) => {
 });
 app.get('/', (req, res) => res.send('OK'));
 
-
-
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`Route ${req.originalUrl} Not Found`, 404))
 })
-
 app.use(globalErrorHandler)
-
 const port =process.env.PORT || 7860;
 server.listen(port, () => {
   console.log(` Server running on http://localhost:${port}`);
