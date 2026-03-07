@@ -8,12 +8,12 @@ import { User } from '../../../db/models/user.model.js';
 import { Room } from '../../../db/models/room.model.js';
 
 interface MyToken {
-  userId: string; 
-  email:string;
-  name: string;
-  image: string;
-  iat?: number;
-  exp?: number;
+    userId: string;
+    email: string;
+    name: string;
+    image: string;
+    iat?: number;
+    exp?: number;
 }
 
 
@@ -23,7 +23,7 @@ const signup = catchError(async (req, res) => {
     if (user) return res.status(400).json({ message: "user already exists" })
     const hashpassword = bcrypt.hashSync(req.body.password, 10)
     req.body.password = hashpassword
-        let newuser = new User(req.body)
+    let newuser = new User(req.body)
     await newuser.save()
     res.json({ message: "success" })
 })
@@ -35,8 +35,8 @@ const signin = catchError(async (req: Request, res: Response, next: NextFunction
         return next(new AppError('Invalid email or password', 401));
     }
     const token = jwt.sign(
-        { userId: user._id, name: user.name , email: user.email , image: user.userImage }, 
-        process.env.JWT_KEY as string , 
+        { userId: user._id, name: user.name, email: user.email, image: user.userImage },
+        process.env.JWT_KEY as string,
         { expiresIn: '7d' }  // جعلناها 7 أيام لتطابق الكوكي
     );
     const cookieOptions = {
@@ -47,39 +47,39 @@ const signin = catchError(async (req: Request, res: Response, next: NextFunction
     };
 
     res.cookie('token', token, cookieOptions);
-    res.status(200).json({ 
-        message: "success", 
-        user: { name: user.name, id: user._id , email: user.email , image: user.userImage } 
+    res.status(200).json({
+        message: "success",
+        user: { name: user.name, id: user._id, email: user.email, image: user.userImage }
     });
 });
 
 
-const logout = catchError((req:Request, res:any) => {
+const logout = catchError((req: Request, res: any) => {
     res.clearCookie('token', {
         httpOnly: true,
-        secure:true,
+        secure: true,
         sameSite: 'none',
-        
+
     });
     return res.json({ message: 'Logged out successfully' })
 })
 
 
 const getMyProfile = catchError(async (req, res, next) => {
-    const token = req.cookies.token; 
+    const token = req.cookies.token;
     if (!token) {
         return next(new AppError('غير مسجل دخول، يرجى تسجيل الدخول ثانية', 401));
     }
-    const decoded = jwt.verify(token, process.env.JWT_KEY  as string) as MyToken;
+    const decoded = jwt.verify(token, process.env.JWT_KEY as string) as MyToken;
 
-    const user = await User.findById(decoded.userId) ;
+    const user = await User.findById(decoded.userId);
 
     if (!user) {
         return next(new AppError('هذا المستخدم لم يعد موجوداً', 404));
     }
-    return res.json({ 
+    return res.json({
         status: 'success',
-        user 
+        user
     });
 });
 
@@ -89,16 +89,16 @@ const getUserById = catchError(async (req, res, next) => {
     if (!user) {
         return next(new AppError('user not found', 404));
     }
-    return res.json({ 
+    return res.json({
         status: 'success',
-        user 
+        user
     });
 });
 // get all users
 const getAllUsers = catchError(async (req: Request, res: Response) => {
-     const currentUserId = req.user.userId;
-   const users = await User.find({ _id: { $ne: currentUserId } })
-                            .select('name userImage fulluserImage');
+    const currentUserId = req.user.userId;
+    const users = await User.find({ _id: { $ne: currentUserId } })
+        .select('name userImage fulluserImage');
 
     res.status(200).json({
         status: 'success',
@@ -106,7 +106,7 @@ const getAllUsers = catchError(async (req: Request, res: Response) => {
     });
 });
 
- const createGroup = catchError(async (req: any, res: Response, next: NextFunction) => {
+const createGroup = catchError(async (req: any, res: Response, next: NextFunction) => {
     const { name, members } = req.body; // members: مصفوفة IDs للأصدقاء
     const adminId = req.user.userId;
     if (!name || !members || !Array.isArray(members) || members.length === 0) {
@@ -138,7 +138,7 @@ const getAllUsers = catchError(async (req: Request, res: Response) => {
 });
 
 // 4. جلب جميع المجموعات التي انضم إليها المستخدم (لعرضها في القائمة)
- const getUserGroups = catchError(async (req: any, res: Response) => {
+const getUserGroups = catchError(async (req: any, res: Response) => {
     const currentUserId = req.user.userId;
 
     const groups = await Room.find({ members: currentUserId })
@@ -159,6 +159,6 @@ export {
     getMyProfile,
     getUserById,
     getAllUsers,
-    createGroup,    
-    getUserGroups  
+    createGroup,
+    getUserGroups
 }
