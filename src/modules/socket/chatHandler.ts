@@ -30,7 +30,6 @@ export const registerChatHandlers = async (io: Server, socket: Socket) => {
     }
   }
 
-  // --- 1. حدث الانضمام لغرفة مجموعة ---
   socket.on("join_group", async ({ roomId }) => {
     try {
       const room = await Room.findOne({ _id: roomId, members: userId });
@@ -73,7 +72,6 @@ export const registerChatHandlers = async (io: Server, socket: Socket) => {
     }
   });
 
-  // --- 3. مغادرة الغرفة ---
   socket.on("leave_group", (roomId) => {
     socket.leave(roomId);
     console.log(`User ${userId} left room: ${roomId}`);

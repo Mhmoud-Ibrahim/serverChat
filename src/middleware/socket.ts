@@ -32,7 +32,7 @@ const socketAuth = (socket: Socket, next: (err?: Error) => void) => {
     }
 
     // 3. التحقق من التوكن
-    const secretKey = process.env.JWT_KEY || "ChatNowSecretKey";
+    const secretKey = process.env.JWT_KEY as string;
     const decoded = jwt.verify(token, secretKey) as any;
 
     // 4. تخزين البيانات في socket.user و socket.data لضمان عمل كل الوظائف

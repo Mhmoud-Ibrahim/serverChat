@@ -36,7 +36,7 @@ const signin = catchError(async (req: Request, res: Response, next: NextFunction
     }
     const token = jwt.sign(
         { userId: user._id, name: user.name , email: user.email , image: user.userImage }, 
-        process.env.JWT_KEY as string || "MahmoudChatsecretkey", 
+        process.env.JWT_KEY as string , 
         { expiresIn: '7d' }  // جعلناها 7 أيام لتطابق الكوكي
     );
     const cookieOptions = {
@@ -67,7 +67,6 @@ const logout = catchError((req:Request, res:any) => {
 
 const getMyProfile = catchError(async (req, res, next) => {
     const token = req.cookies.token; 
-
     if (!token) {
         return next(new AppError('غير مسجل دخول، يرجى تسجيل الدخول ثانية', 401));
     }
