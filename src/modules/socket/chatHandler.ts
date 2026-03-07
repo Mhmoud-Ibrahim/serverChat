@@ -46,34 +46,6 @@ export const registerChatHandlers = async (io: Server, socket: Socket) => {
   });
 
   // --- 2. إرسال رسالة داخل مجموعة ---
-//  socket.on("send_group_msg", async ({ roomId, msg, imageUrl }) => {
-//   try {
-//      if (!roomId) return;
-//     const savedMsg = await MessagesModel.create({
-//       text: msg || "",
-//       imageUrl: imageUrl || "",
-//       sender: userId,
-//       room: roomId, // تأكد أن الحقل في الموديل اسمه room وليس roomId
-//       seen: false
-//     });
-
-//     const responseData = {
-//       _id: savedMsg._id.toString(), // تحويله لـ string لضمان الثبات
-//       text: savedMsg.text,
-//       imageUrl: savedMsg.imageUrl,
-//       senderId: userId,
-//       senderName: socket.data.userName || "Guest", // قيمة بديلة
-//       roomId: roomId, 
-//       createdAt: savedMsg.createdAt
-//     };
-
-//     // الإرسال للكل في الغرفة بمن فيهم المرسل
-//     io.to(roomId).emit("receive_group_msg", responseData);
-
-//   } catch (error) {
-//     console.error("Error sending group message:", error);
-//   }
-// });
 
 socket.on("send_group_msg", async ({ roomId, msg, imageUrl }) => {
   try {
