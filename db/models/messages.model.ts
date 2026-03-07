@@ -22,8 +22,7 @@ const messageSchema = new mongoose.Schema<IMessage>({
   },
   receiver: { 
     type: Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
+    ref: 'User'
   },
   imageUrl: { 
     type: String, 

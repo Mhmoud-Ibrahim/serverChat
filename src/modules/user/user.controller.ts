@@ -71,9 +71,7 @@ const getMyProfile = catchError(async (req, res, next) => {
         return next(new AppError('غير مسجل دخول، يرجى تسجيل الدخول ثانية', 401));
     }
     const decoded = jwt.verify(token, process.env.JWT_KEY as string) as MyToken;
-
     const user = await User.findById(decoded.userId);
-
     if (!user) {
         return next(new AppError('هذا المستخدم لم يعد موجوداً', 404));
     }

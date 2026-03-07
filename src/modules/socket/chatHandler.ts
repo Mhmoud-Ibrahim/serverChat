@@ -46,31 +46,67 @@ export const registerChatHandlers = async (io: Server, socket: Socket) => {
   });
 
   // --- 2. إرسال رسالة داخل مجموعة ---
- socket.on("send_group_msg", async ({ roomId, msg, imageUrl }) => {
-    try {
-      const savedMsg = await MessagesModel.create({
-        text: msg || "",
-        imageUrl: imageUrl || "",
-        sender: userId,
-        room: roomId, // الحفظ في الداتابيز كما هو
-        seen: false
-      });
+//  socket.on("send_group_msg", async ({ roomId, msg, imageUrl }) => {
+//   try {
+//      if (!roomId) return;
+//     const savedMsg = await MessagesModel.create({
+//       text: msg || "",
+//       imageUrl: imageUrl || "",
+//       sender: userId,
+//       room: roomId, // تأكد أن الحقل في الموديل اسمه room وليس roomId
+//       seen: false
+//     });
 
-         const responseData = {
-        _id: savedMsg._id,
-        text: savedMsg.text,
-        imageUrl: savedMsg.imageUrl,
-        senderId: userId,
-        senderName: socket.data.userName, 
-        roomId: roomId, 
-        createdAt: savedMsg.createdAt
-      };
-     io.to(roomId).emit("receive_group_msg", responseData);
+//     const responseData = {
+//       _id: savedMsg._id.toString(), // تحويله لـ string لضمان الثبات
+//       text: savedMsg.text,
+//       imageUrl: savedMsg.imageUrl,
+//       senderId: userId,
+//       senderName: socket.data.userName || "Guest", // قيمة بديلة
+//       roomId: roomId, 
+//       createdAt: savedMsg.createdAt
+//     };
 
-    } catch (error) {
-      console.error("Error sending group message:", error);
-    }
-  });
+//     // الإرسال للكل في الغرفة بمن فيهم المرسل
+//     io.to(roomId).emit("receive_group_msg", responseData);
+
+//   } catch (error) {
+//     console.error("Error sending group message:", error);
+//   }
+// });
+
+socket.on("send_group_msg", async ({ roomId, msg, imageUrl }) => {
+  try {
+    // تأكد أن الـ roomId صالح
+    if (!roomId) return;
+
+    const savedMsg = await MessagesModel.create({
+      text: msg || "",
+      imageUrl: imageUrl || "",
+      sender: userId,
+      room: roomId,
+      // لا نرسل receiver هنا لأنها مجموعة
+      seen: false
+    });
+
+    const responseData = {
+      _id: savedMsg._id.toString(), // تحويل الـ ID لنص لضمان الـ Key في الفرونت
+      text: savedMsg.text,
+      imageUrl: savedMsg.imageUrl,
+      senderId: userId,
+      senderName: socket.data.userName || "عضو", 
+      roomId: roomId, 
+      createdAt: savedMsg.createdAt
+    };
+
+    // إرسال للغرفة بالكامل
+    io.to(roomId).emit("receive_group_msg", responseData);
+
+  } catch (error) {
+    console.error("Error saving message:", error);
+  }
+});
+
 
   socket.on("leave_group", (roomId) => {
     socket.leave(roomId);
