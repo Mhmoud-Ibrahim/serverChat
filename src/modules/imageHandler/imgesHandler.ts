@@ -18,6 +18,7 @@ export const uploadMessageImage = (req: Request, res: Response, next: NextFuncti
     });
 };
 export const uploadProfileImage = catchError(async (req: any, res: any, next: any) => {
+   console.log(req.user)
     if (!req.file) {
         return next(new AppError('No file received. Please use field name: image', 400));
     }
