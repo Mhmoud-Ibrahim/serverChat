@@ -33,11 +33,11 @@ const io = new Server(server, {
   }
 });
 
-import path from 'path';
+app.use('/uploads', express.static('uploads'));
+
 app.use('/auth', userRouter);
 app.use(imgRouter);
 
-app.use('/uploads', express.static('uploads'));
 io.use(socketAuth);
 
 io.on('connection', (socket) => {
