@@ -37,8 +37,7 @@ import path from 'path';
 app.use('/auth', userRouter);
 app.use(imgRouter);
 
-const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads'));
 io.use(socketAuth);
 
 io.on('connection', (socket) => {
