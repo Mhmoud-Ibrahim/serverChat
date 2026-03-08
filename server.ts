@@ -40,9 +40,11 @@ app.use(imgRouter);
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 io.use(socketAuth);
+
 io.on('connection', (socket) => {
   console.log(`🚀 User Authenticated: ${socket.data.userId} (Socket ID: ${socket.id})`);
   registerChatHandlers(io, socket);
+ 
   socket.on('disconnect', () => {
     console.log('👋 User Disconnected');
   });

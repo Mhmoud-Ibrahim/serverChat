@@ -137,7 +137,8 @@ const createGroup = catchError(async (req: any, res: Response, next: NextFunctio
 
 // 4. جلب جميع المجموعات التي انضم إليها المستخدم (لعرضها في القائمة)
 const getUserGroups = catchError(async (req: any, res: Response) => {
-    const currentUserId = req.user.userId;
+    
+    const currentUserId = req.user.userId ||req.user.id|| req.user._id;
 
     const groups = await Room.find({ members: currentUserId })
         .populate('members', 'name userImage fulluserImage')
