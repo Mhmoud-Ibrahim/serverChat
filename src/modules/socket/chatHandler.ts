@@ -411,6 +411,32 @@ export const registerChatHandlers = async (io: Server, socket: Socket) => {
     }
   });
 
+  // حذف المجموعة (يسمح فقط للآدمن أو حسب منطق عملك)
+socket.on("delete_group", async ({ roomId }) => {
+  try {
+    // 1. التأكد من أن المستخدم هو الآدمن (اختياري ولكن مهم)
+    const room = await Room.findOne({ _id: roomId, admin: userId });
+    if (!room) return socket.emit("error", "غير مسموح لك بحذف هذه المجموعة");
+
+    // 2. حذف الرسائل المرتبطة بالمجموعة أولاً
+    await MessagesModel.deleteMany({ room: roomId });
+
+    // 3. حذف المجموعة نفسها
+    await Room.findByIdAndDelete(roomId);
+
+    // 4. إخبار جميع أعضاء المجموعة بأنها حُذفت ليتم توجيههم للخارج
+    io.to(roomId).emit("group_deleted", { roomId });
+    
+    // 5. جعل جميع السوكيتات تغادر الغرفة
+    io.in(roomId).socketsLeave(roomId);
+
+    console.log(`Group ${roomId} deleted by ${userId}`);
+  } catch (error) {
+    console.error("Error deleting group:", error);
+    socket.emit("error", "فشل حذف المجموعة");
+  }
+});
+
   // --- 5. المستمعين (Listeners) ---
   socket.on("private_msg", handlePrivateMessage);
   socket.on("delete_msg", handleDeleteMessage);
