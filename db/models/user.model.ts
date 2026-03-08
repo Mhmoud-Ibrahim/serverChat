@@ -25,11 +25,24 @@ const Schema = new mongoose.Schema<IUser>({
 //     }
 //     return null;
 // });
+// Schema.virtual('fulluserImage').get(function (this: IUser) {
+//   if (this.userImage && !this.userImage.startsWith('https')) {
+//     return `https://m2dd-chatserver.hf.space/uploads/messages/${this.userImage}`;
+//   }
+//   return this.userImage;
+// });
 Schema.virtual('fulluserImage').get(function (this: IUser) {
-  if (this.userImage && !this.userImage.startsWith('https')) {
-    return `https://m2dd-chatserver.hf.space/uploads/messages/${this.userImage}`;
+  if (this.userImage) {
+    if (this.userImage.startsWith('http://m2dd-serverchatapp.hf.space')) {
+      return this.userImage.replace('http://', 'https://');
+    }
+    if (!this.userImage.startsWith('http')) {
+      return `https://m2dd-serverchatapp.hf.space/uploads/profiles/${this.userImage}`;
+    }
+    
+    return this.userImage;
   }
-  return this.userImage;
+  return null;
 });
 
 export const User = mongoose.model('User', Schema)

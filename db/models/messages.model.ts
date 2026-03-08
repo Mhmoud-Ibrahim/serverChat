@@ -41,13 +41,27 @@ timestamps: true,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
-messageSchema.index({ room: 1, createdAt: 1 });
-// بدلاً من 'post init'، نستخدم Virtual لتركيب الرابط ديناميكياً
+// messageSchema.index({ room: 1, createdAt: 1 });
+// // بدلاً من 'post init'، نستخدم Virtual لتركيب الرابط ديناميكياً
+// messageSchema.virtual('fullImageUrl').get(function (this: IMessage) {
+//   if (this.imageUrl && !this.imageUrl.startsWith('https')) {
+//     return `https://m2dd-chatserver.hf.space/uploads/messages/${this.imageUrl}`;
+//   }
+//   return this.imageUrl;
 messageSchema.virtual('fullImageUrl').get(function (this: IMessage) {
-  if (this.imageUrl && !this.imageUrl.startsWith('https')) {
-    return `https://m2dd-chatserver.hf.space/uploads/messages/${this.imageUrl}`;
+  if (this.imageUrl) {
+    if (this.imageUrl.startsWith('http://m2dd-serverchatapp.hf.space')) {
+      return this.imageUrl.replace('http://', 'https://');
+    }
+    if (!this.imageUrl.startsWith('http')) {
+      return `https://m2dd-serverchatapp.hf.space{this.imageUrl}`;
+    }
+    
+    return this.imageUrl; // سيعيد الرابط كما هو إذا كان يبدأ بـ https فعلياً
   }
-  return this.imageUrl;
+  return null;
 });
+
+
 
 export const MessagesModel = mongoose.model<IMessage>('Messages', messageSchema);
