@@ -1,5 +1,5 @@
  import mongoose from "mongoose";
-export interface ITask extends Document {
+export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
@@ -7,7 +7,7 @@ export interface ITask extends Document {
     fullImageUrl?: string; // حقل اختياري للرابط الكامل
 }
 
-const Schema = new mongoose.Schema<ITask>({
+const Schema = new mongoose.Schema<IUser>({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
@@ -18,7 +18,7 @@ const Schema = new mongoose.Schema<ITask>({
     toObject: { virtuals: true }
 });
 
-Schema.virtual('fulluserImage').get(function (this: ITask) {
+Schema.virtual('fulluserImage').get(function (this: IUser) {
     if (this.userImage) {
         // تأكد أن المسار يطابق مجلد Multer (uploads/messages)
         return `https://m2dd-chatserver.hf.space/uploads/profiles/${this.userImage}`;
