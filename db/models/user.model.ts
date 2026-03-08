@@ -4,7 +4,8 @@ export interface IUser extends Document {
     email: string;
     password: string;
     userImage: string;
-    fullImageUrl?: string; // حقل اختياري للرابط الكامل
+    fullImageUrl?: string;
+    fulluserImage?: string // حقل اختياري للرابط الكامل
 }
 
 const Schema = new mongoose.Schema<IUser>({
