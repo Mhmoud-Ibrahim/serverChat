@@ -4,7 +4,6 @@ export interface IUser extends Document {
     email: string;
     password: string;
     userImage: string;
-    fullImageUrl?: string;
     fulluserImage?: string // حقل اختياري للرابط الكامل
 }
 
@@ -19,12 +18,18 @@ const Schema = new mongoose.Schema<IUser>({
     toObject: { virtuals: true }
 });
 
+// Schema.virtual('fulluserImage').get(function (this: IUser) {
+//     if (this.userImage) {
+//         // تأكد أن المسار يطابق مجلد Multer (uploads/messages)
+//         return `https://m2dd-chatserver.hf.space/uploads/profiles/${this.userImage}`;
+//     }
+//     return null;
+// });
 Schema.virtual('fulluserImage').get(function (this: IUser) {
-    if (this.userImage) {
-        // تأكد أن المسار يطابق مجلد Multer (uploads/messages)
-        return `https://m2dd-chatserver.hf.space/uploads/profiles/${this.userImage}`;
-    }
-    return null;
+  if (this.userImage && !this.userImage.startsWith('https')) {
+    return `https://m2dd-chatserver.hf.space/uploads/messages/${this.userImage}`;
+  }
+  return this.userImage;
 });
 
 export const User = mongoose.model('User', Schema)

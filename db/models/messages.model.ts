@@ -44,8 +44,8 @@ timestamps: true,
 messageSchema.index({ room: 1, createdAt: 1 });
 // بدلاً من 'post init'، نستخدم Virtual لتركيب الرابط ديناميكياً
 messageSchema.virtual('fullImageUrl').get(function (this: IMessage) {
-  if (this.imageUrl && !this.imageUrl.startsWith('http')) {
-    return `http://localhost:3000/uploads/messages/${this.imageUrl}`;
+  if (this.imageUrl && !this.imageUrl.startsWith('https')) {
+    return `https://m2dd-chatserver.hf.space/uploads/messages/${this.imageUrl}`;
   }
   return this.imageUrl;
 });
