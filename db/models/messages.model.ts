@@ -54,7 +54,7 @@ messageSchema.virtual('fullImageUrl').get(function (this: IMessage) {
       return this.imageUrl.replace('http://', 'https://');
     }
     if (!this.imageUrl.startsWith('http')) {
-      return `https://m2dd-serverchatapp.hf.space{this.imageUrl}`;
+      return `https://m2dd-serverchatapp.hf.space/uploads/messages/${this.imageUrl}`;
     }
     
     return this.imageUrl; 
