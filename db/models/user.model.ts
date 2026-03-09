@@ -24,7 +24,7 @@ Schema.virtual('fullUserImage').get(function (this: IUser) {
       return this.userImage.replace('http://', 'https://');
     }
     if (!this.userImage.startsWith('http')) {
-      return `https://m2dd-serverchatapp.hf.space/uploads/userImages/${this.userImage}`;
+      return `https://m2dd-serverchatapp.hf.space/uploads/profiles/${this.userImage}`;
     }
     
     return this.userImage;
