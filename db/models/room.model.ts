@@ -18,5 +18,17 @@ const roomSchema = new mongoose.Schema<IRoom>({
 }, {
     timestamps: true
 });
-
+roomSchema.virtual('groupImage').get(function (this: IRoom) {
+  if (this.groupImage) {
+    if (this.groupImage.startsWith('http://m2dd-serverchatapp.hf.space')) {
+      return this.groupImage.replace('http://', 'https://');
+    }
+    if (!this.groupImage.startsWith('http')) {
+      return `https://m2dd-serverchatapp.hf.space{this.groupImage}`;
+    }
+    
+    return this.groupImage; 
+  }
+  return null;
+});
 export const Room = mongoose.model<IRoom>('Room', roomSchema);

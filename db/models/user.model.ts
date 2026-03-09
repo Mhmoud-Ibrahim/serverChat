@@ -13,9 +13,10 @@ const Schema = new mongoose.Schema<IUser>({
     password: { type: String, required: true },
     userImage: { type: String, default: null } 
 }, {
-    timestamps: true,
-    toJSON: { virtuals: true }, 
-    toObject: { virtuals: true }
+   timestamps: true,
+  versionKey: false,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 Schema.virtual('fullUserImage').get(function (this: IUser) {
