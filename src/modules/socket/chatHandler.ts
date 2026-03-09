@@ -389,18 +389,68 @@ export const registerChatHandlers = async (io: Server, socket: Socket) => {
     }
   });
 
-  const handleDeleteMessage = async ({ messageId, receiverId }: { messageId: string, receiverId: string }) => {
+  // const handleDeleteMessage = async ({ messageId, receiverId }: { messageId: string, receiverId: string }) => {
+  //   try {
+  //     const message = await MessagesModel.findOneAndDelete({ _id: messageId, sender: userId });
+  //     if (message) {
+  //       socket.emit("message_deleted", { messageId });
+  //       const receiverData = onlineUsers.get(receiverId);
+  //       if (receiverData) io.to(receiverData.socketId).emit("message_deleted", { messageId });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting message:", error);
+  //   }
+  // };
+const handleDeleteMessage = async ({ messageId, receiverId }: { messageId: string, receiverId: string }) => {
     try {
-      const message = await MessagesModel.findOneAndDelete({ _id: messageId, sender: userId });
+      // 1. التأكد من أن الحذف يتم فقط بواسطة صاحب الرسالة (المرسل)
+      const message = await MessagesModel.findOneAndDelete({ 
+        _id: messageId, 
+        sender: userId // تأكد أن اسم الحقل في الموديل senderId وليس sender
+      });
+
       if (message) {
+        // 2. إرسال حدث الحذف للمرسل نفسه (لتحديث واجهته)
         socket.emit("message_deleted", { messageId });
+
+        // 3. إرسال حدث الحذف للمستلم إذا كان متاحاً
+        // ملاحظة: تأكد أنك تستخدم io (للكل) أو socket.to(socketId)
         const receiverData = onlineUsers.get(receiverId);
-        if (receiverData) io.to(receiverData.socketId).emit("message_deleted", { messageId });
+        if (receiverData) {
+           io.to(receiverData.socketId).emit("message_deleted", { messageId });
+        }
       }
     } catch (error) {
       console.error("Error deleting message:", error);
     }
   };
+  ///
+
+  const handleDeleteFullChat = async ({ receiverId }: { receiverId: string }) => {
+    try {
+      const senderId = socket.data.userId;
+      
+      // حذف جميع الرسائل المتبادلة
+      await MessagesModel.deleteMany({
+        $or: [
+          { sender: senderId, receiver: receiverId },
+          { sender: receiverId, receiver: senderId }
+        ]
+      });
+      socket.emit('get_history', []);
+      const receiverData = onlineUsers.get(receiverId);
+      if (receiverData) {
+        io.to(receiverData.socketId).emit('get_history', []);
+      }
+      
+      console.log(`Chat cleared between ${senderId} and ${receiverId}`);
+    } catch (error) {
+      console.error("Error deleting full chat:", error);
+    }
+  };
+
+// تسجيل الحدث في الأسفل
+socket.on("delete_full_chat", handleDeleteFullChat);
 
   socket.on("update_profile", async (updatedData) => {
     try {
@@ -439,7 +489,7 @@ socket.on("delete_group", async ({ roomId }) => {
 
   // --- 5. المستمعين (Listeners) ---
   socket.on("private_msg", handlePrivateMessage);
-  socket.on("delete_msg", handleDeleteMessage);
+  socket.on("delete_message", handleDeleteMessage);
   
   socket.on("disconnect", () => {
     if (userId) {

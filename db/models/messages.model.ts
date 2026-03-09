@@ -57,7 +57,7 @@ messageSchema.virtual('fullImageUrl').get(function (this: IMessage) {
       return `https://m2dd-serverchatapp.hf.space{this.imageUrl}`;
     }
     
-    return this.imageUrl; // سيعيد الرابط كما هو إذا كان يبدأ بـ https فعلياً
+    return this.imageUrl; 
   }
   return null;
 });
