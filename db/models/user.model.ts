@@ -11,10 +11,10 @@ const Schema = new mongoose.Schema<IUser>({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    userImage: { type: String, default: null } // 👈 التأكد أن هذا موجود
+    userImage: { type: String, default: null } 
 }, {
     timestamps: true,
-    toJSON: { virtuals: true }, // 👈 ضروري جداً لظهور الرابط في الفرونت
+    toJSON: { virtuals: true }, 
     toObject: { virtuals: true }
 });
 
@@ -24,10 +24,10 @@ Schema.virtual('fullUserImage').get(function (this: IUser) {
       return this.userImage.replace('http://', 'https://');
     }
     if (!this.userImage.startsWith('http')) {
-      return `https://m2dd-serverchatapp.hf.space/uploads/profiles/${this.userImage}`;
+      return `https://m2dd-serverchatapp.hf.space{this.userImage}`;
     }
     
-    return this.userImage;
+    return this.userImage; 
   }
   return null;
 });
