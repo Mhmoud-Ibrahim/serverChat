@@ -36,7 +36,7 @@ export const uploadProfileImage = catchError(async (req: any, res: any, next: an
     
     // ملاحظة: تأكد أن اسم المجلد في الرابط هو 'profiles' كما حددته في uploadSingleFile
     const baseUrl = `${req.protocol}://${req.get('host')}`;
-    userObject.fulluserImage = `${baseUrl}/uploads/profiles/${req.file.filename}`;
+    userObject.fullUserImage = `${baseUrl}/uploads/profiles/${req.file.filename}`;
 
     return res.status(200).json({ 
         message: "Success", 
