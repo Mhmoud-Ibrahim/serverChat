@@ -96,7 +96,7 @@ const getUserById = catchError(async (req, res, next) => {
 const getAllUsers = catchError(async (req: Request, res: Response) => {
     const currentUserId = req.user.userId;
     const users = await User.find({ _id: { $ne: currentUserId } })
-        .select('name userImage fulluserImage');
+        .select('name userImage fullUserImage');
 
     res.status(200).json({
         status: 'success',
@@ -126,7 +126,7 @@ const createGroup = catchError(async (req: any, res: Response, next: NextFunctio
 
     // عمل Populate للأعضاء لإرجاع بياناتهم فوراً للفرونت اند
     const populatedGroup = await Room.findById(newGroup._id)
-        .populate('members', 'name userImage fulluserImage')
+        .populate('members', 'name userImage fullUserImage')
         .populate('admin', 'name');
 
     res.status(201).json({
@@ -141,7 +141,7 @@ const getUserGroups = catchError(async (req: any, res: Response) => {
     const currentUserId = req.user.userId ||req.user.id|| req.user._id;
 
     const groups = await Room.find({ members: currentUserId })
-        .populate('members', 'name userImage fulluserImage')
+        .populate('members', 'name userImage fullUserImage')
         .sort('-createdAt');
 
     res.status(200).json({
