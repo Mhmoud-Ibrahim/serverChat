@@ -4,7 +4,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     userImage: string;
-    fulluserImage?: string // حقل اختياري للرابط الكامل
+    fullUserImage?: string // حقل اختياري للرابط الكامل
 }
 
 const Schema = new mongoose.Schema<IUser>({
@@ -18,26 +18,13 @@ const Schema = new mongoose.Schema<IUser>({
     toObject: { virtuals: true }
 });
 
-// Schema.virtual('fulluserImage').get(function (this: IUser) {
-//     if (this.userImage) {
-//         // تأكد أن المسار يطابق مجلد Multer (uploads/messages)
-//         return `https://m2dd-chatserver.hf.space/uploads/profiles/${this.userImage}`;
-//     }
-//     return null;
-// });
-// Schema.virtual('fulluserImage').get(function (this: IUser) {
-//   if (this.userImage && !this.userImage.startsWith('https')) {
-//     return `https://m2dd-chatserver.hf.space/uploads/messages/${this.userImage}`;
-//   }
-//   return this.userImage;
-// });
-Schema.virtual('fulluserImage').get(function (this: IUser) {
+Schema.virtual('fullUserImage').get(function (this: IUser) {
   if (this.userImage) {
     if (this.userImage.startsWith('http://m2dd-serverchatapp.hf.space')) {
       return this.userImage.replace('http://', 'https://');
     }
     if (!this.userImage.startsWith('http')) {
-      return `https://m2dd-serverchatapp.hf.space/uploads/profiles/${this.userImage}`;
+      return `https://m2dd-serverchatapp.hf.space/uploads/userImages/${this.userImage}`;
     }
     
     return this.userImage;
