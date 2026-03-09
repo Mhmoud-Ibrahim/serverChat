@@ -454,7 +454,7 @@ socket.on("delete_full_chat", handleDeleteFullChat);
 
   socket.on("update_profile", async (updatedData) => {
     try {
-      const updatedUser = await User.findByIdAndUpdate(userId, { $set: updatedData }, { new: true });
+      const updatedUser = await User.findByIdAndUpdate(userId, { $set: updatedData },  { returnDocument: 'after' } );
       if (updatedUser) socket.emit("profile_updated", { user: updatedUser });
     } catch (err) {
       socket.emit("error", "Failed to update profile");

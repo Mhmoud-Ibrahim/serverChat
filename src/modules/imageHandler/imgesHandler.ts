@@ -18,7 +18,7 @@ export const uploadMessageImage = (req: Request, res: Response, next: NextFuncti
     });
 };
 export const uploadProfileImage = catchError(async (req: any, res: any, next: any) => {
-   console.log(req.user)
+   
     if (!req.file) {
         return next(new AppError('No file received. Please use field name: image', 400));
     }
@@ -26,7 +26,7 @@ export const uploadProfileImage = catchError(async (req: any, res: any, next: an
     const updatedUser = await User.findByIdAndUpdate(
         userId,
         { userImage: req.file.filename }, 
-        { new: true }
+         { returnDocument: 'after' } 
     ).select("-password");
 
     if (!updatedUser) {
