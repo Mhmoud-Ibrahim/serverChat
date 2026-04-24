@@ -209,9 +209,9 @@ const sendTokenResponse = (user: any, res: Response) => {
  const googleAuthSuccess = catchError(async (req: Request, res: Response) => {
     if (req.user) {
         sendTokenResponse(req.user, res);
-        res.redirect('https://noor-store-five.vercel.app'); 
+        res.redirect('https://chatnow26.netlify.app'); 
     } else {
-        res.redirect('https://vercel.app');
+        res.redirect('https://chatnow26.netlify.app');
     }
 });
 
