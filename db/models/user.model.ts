@@ -4,6 +4,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     userImage: string;
+    googleId?: string;
     fullUserImage?: string // حقل اختياري للرابط الكامل
 }
 
@@ -11,7 +12,8 @@ const Schema = new mongoose.Schema<IUser>({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    userImage: { type: String, default: null } 
+    userImage: { type: String, default: null } ,
+    googleId: { type: String, required: false },
 }, {
    timestamps: true,
   versionKey: false,

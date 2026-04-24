@@ -6,6 +6,9 @@ import { AppError } from '../../utils/appError.js';
 import type { NextFunction, Request, Response } from 'express';
 import { User } from '../../../db/models/user.model.js';
 import { Room } from '../../../db/models/room.model.js';
+import passport from 'passport';
+import { Strategy as GoogleStrategy, type Profile, type VerifyCallback } from 'passport-google-oauth20';
+import crypto from 'crypto'; 
 
 interface MyToken {
     userId: string;
@@ -151,6 +154,67 @@ const getUserGroups = catchError(async (req: any, res: Response) => {
     });
 });
 
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.clientID as string,
+    clientSecret: process.env.clientSecret as string,
+    callbackURL: "https://m2dd-serverchatapp.hf.space/auth/google/callback",
+  },
+  async (_accessToken: string, _refreshToken: string, profile: Profile, done: VerifyCallback) => {
+    try {
+        const userEmail = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+
+        if (!userEmail) {
+            return done(null, false);
+        }
+
+        let user = await User.findOne({ email: userEmail });
+
+        if (!user) {
+            user = await User.create({
+                name: profile.displayName,
+                email: userEmail,
+                password: Math.random().toString(36).slice(-10), // كلمة سر عشوائية
+                userImage: profile.photos && profile.photos[0] ? profile.photos[0].value : '',
+                googleId: profile.id,
+               
+            });
+        } else if (!user.googleId) {
+            user.googleId = profile.id;
+            await user.save();
+        }
+        return done(null, user);
+    } catch (err) {
+        return done(err as Error, undefined);
+    }
+  }
+));
+
+const sendTokenResponse = (user: any, res: Response) => {
+    const token = jwt.sign(
+        { userId: user._id, email: user.email, name: user.name, role: user.role },
+        process.env.JWT_KEY as string,
+        { expiresIn: '24h' }
+    );
+    
+    res.cookie('noorToken', token, {
+        httpOnly: true,
+        secure: true, 
+        sameSite: 'none',
+        maxAge: 24 * 60 * 60 * 1000,
+    });
+    
+    return token;
+};
+ const googleAuthSuccess = catchError(async (req: Request, res: Response) => {
+    if (req.user) {
+        sendTokenResponse(req.user, res);
+        res.redirect('https://noor-store-five.vercel.app'); 
+    } else {
+        res.redirect('https://vercel.app');
+    }
+});
+
 export {
     signup,
     signin,
@@ -159,5 +223,7 @@ export {
     getUserById,
     getAllUsers,
     createGroup,
-    getUserGroups
+    getUserGroups,
+    sendTokenResponse,
+    googleAuthSuccess
 }
