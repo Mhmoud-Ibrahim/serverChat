@@ -8,7 +8,7 @@ import { User } from '../../../db/models/user.model.js';
 import { Room } from '../../../db/models/room.model.js';
 import passport from 'passport';
 import { Strategy as GoogleStrategy, type Profile, type VerifyCallback } from 'passport-google-oauth20';
-import crypto from 'crypto'; 
+ 
 
 interface MyToken {
     userId: string;
@@ -221,7 +221,7 @@ const googleAuthSuccess = catchError(async (req: Request, res: Response) => {
             secure: true, 
             sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            domain: '.hf.space' // اختياري: جرب بدونه أولاً، إذا لم يعمل أضفه
+           // اختياري: جرب بدونه أولاً، إذا لم يعمل أضفه
         });
 
         // إعادة التوجيه للفرونت إند
