@@ -197,7 +197,7 @@ const sendTokenResponse = (user: any, res: Response) => {
         { expiresIn: '24h' }
     );
     
-    res.cookie('noorToken', token, {
+    res.cookie('token', token, {
         httpOnly: true,
         secure: true, 
         sameSite: 'none',
@@ -206,14 +206,31 @@ const sendTokenResponse = (user: any, res: Response) => {
     
     return token;
 };
- const googleAuthSuccess = catchError(async (req: Request, res: Response) => {
+// تعديل دالة نجاح جوجل
+const googleAuthSuccess = catchError(async (req: Request, res: Response) => {
     if (req.user) {
-        sendTokenResponse(req.user, res);
+        const user: any = req.user;
+        const token = jwt.sign(
+            { userId: user._id, email: user.email, name: user.name, image: user.userImage },
+            process.env.JWT_KEY as string,
+            { expiresIn: '7d' }
+        );
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true, 
+            sameSite: 'none',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            domain: '.hf.space' // اختياري: جرب بدونه أولاً، إذا لم يعمل أضفه
+        });
+
+        // إعادة التوجيه للفرونت إند
         res.redirect('https://chatnow26.netlify.app'); 
     } else {
-        res.redirect('https://chatnow26.netlify.app');
+        res.redirect('https://netlify.app');
     }
 });
+
 
 export {
     signup,
