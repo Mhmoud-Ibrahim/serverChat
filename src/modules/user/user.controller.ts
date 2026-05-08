@@ -213,7 +213,8 @@ const googleAuthSuccess = catchError(async (req: Request, res: Response) => {
     if (req.user) {
         const user: any = req.user;
         const token = jwt.sign(
-            { userId: user._id, email: user.email, name: user.name, image: user.userImage },
+            { userId: user._id, email: user.email, name: user.name,userImage: user.userImage },
+          
             process.env.JWT_KEY as string,
             { expiresIn: '7d' }
         );
