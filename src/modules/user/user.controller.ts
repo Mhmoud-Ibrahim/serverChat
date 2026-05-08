@@ -178,8 +178,10 @@ passport.use(new GoogleStrategy({
                 userImage: profile.photos && profile.photos[0] ? profile.photos[0].value : '',
                 googleId: profile.id,
                
-            });
-        } else if (!user.googleId) {
+            });} else if (profile.photos && profile.photos[0]) {
+                user.userImage = profile.photos[0].value;
+            }
+         else if (!user.googleId) {
             user.googleId = profile.id;
             await user.save();
         }
@@ -192,7 +194,7 @@ passport.use(new GoogleStrategy({
 
 const sendTokenResponse = (user: any, res: Response) => {
     const token = jwt.sign(
-        { userId: user._id, email: user.email, name: user.name, role: user.role },
+        { userId: user._id, email: user.email, name: user.name, role: user.role,userImage: user.userImage },
         process.env.JWT_KEY as string,
         { expiresIn: '24h' }
     );
