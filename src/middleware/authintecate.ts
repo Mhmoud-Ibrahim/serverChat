@@ -22,11 +22,9 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     }
 
     try {
-        // 2. التحقق من التوكن
+      
         const secretKey = process.env.JWT_KEY as string;
         const decoded = jwt.verify(token, secretKey) as MyToken;
-
-        // 3. تخزين البيانات في req.user (هنا لا نستخدم Socket إطلاقاً)
         req.user = decoded; 
         
         return next();

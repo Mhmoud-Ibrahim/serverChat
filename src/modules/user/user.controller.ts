@@ -194,7 +194,7 @@ passport.use(new GoogleStrategy({
 
 const sendTokenResponse = (user: any, res: Response) => {
     const token = jwt.sign(
-        { userId: user._id, email: user.email, name: user.name, role: user.role,userImage: user.userImage },
+        { userId: user._id, email: user.email, name: user.name,userImage: user.userImage },
         process.env.JWT_KEY as string,
         { expiresIn: '24h' }
     );
@@ -224,10 +224,10 @@ const googleAuthSuccess = catchError(async (req: Request, res: Response) => {
             secure: true, 
             sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000,
-           // اختياري: جرب بدونه أولاً، إذا لم يعمل أضفه
+           
         });
 
-        // إعادة التوجيه للفرونت إند
+    
         res.redirect('https://chatnow26.netlify.app'); 
     } else {
         res.redirect('https://netlify.app');
